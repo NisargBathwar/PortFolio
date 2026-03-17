@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nisarg | Android Developer Portfolio</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        midnight: '#0B0F19',
+                        slate: { 850: '#151B2B', 900: '#0f172a' },
+                        accent: {
+                            primary: '#6366f1',
+                            secondary: '#818cf8',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0B0F19; }
+        ::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
+
+        body {
+            background-color: #0B0F19;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #FFFFFF 0%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glass {
+            background: rgba(21, 27, 43, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .mask-text { overflow: hidden; display: inline-block; }
+        .mask-text span { display: inline-block; transform: translateY(110%); }
+        
+        .hero-animate { opacity: 0; transform: translateY(20px); }
+
+        .tech-pill {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .tech-pill:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.3);
+        }
+
+        .project-card {
+            transition: all 0.4s ease;
+            background: linear-gradient(180deg, rgba(21, 27, 43, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        .project-card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 20px 40px -20px rgba(99, 102, 241, 0.2);
+            transform: translateY(-5px);
+        }
+
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .marquee-track { animation: marquee 30s linear infinite; }
+    </style>
+</head>
+<body class="text-silver antialiased">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 px-6 py-4 backdrop-blur-xl bg-midnight/80 border-b border-white/5">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="#" class="font-display text-2xl font-bold text-white tracking-tight">
+                Nisarg<span class="text-accent-primary">.</span>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-12">
+                <a href="#about" class="text-sm text-gray-400 hover:text-white transition-colors duration-200">About</a>
+                <a href="#projects" class="text-sm text-gray-400 hover:text-white transition-colors duration-200">Work</a>
+                <a href="#skills" class="text-sm text-gray-400 hover:text-white transition-colors duration-200">Skills</a>
+                <a href="#" class="px-5 py-2.5 bg-white text-midnight text-xs font-bold tracking-wider uppercase rounded-lg hover:bg-accent-secondary transition-all shadow-lg shadow-white/5">
+                    Download CV
+                </a>
+            </div>
+
+            <button class="md:hidden text-white p-2 rounded-lg bg-white/5">
+                <iconify-icon icon="lucide:menu" width="20"></iconify-icon>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex flex-col justify-center relative px-6 pt-20 overflow-hidden">
+        <!-- Background Elements -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            <div class="absolute top-1/4 -left-1/4 w-[600px] h-[600px] bg-accent-primary rounded-full blur-[200px] opacity-[0.08]"></div>
+            <div class="absolute bottom-1/4 -right-1/4 w-[500px] h-[500px] bg-blue-600 rounded-full blur-[180px] opacity-[0.05]"></div>
+        </div>
+        
+        <!-- Main Content Wrapper -->
+        <div class="max-w-7xl mx-auto w-full flex justify-center items-center relative z-10 mb-24">
+            <div class="text-center max-w-3xl">
+                <div class="mb-6 flex items-center justify-center gap-3 hero-animate">
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-secondary opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-accent-primary"></span>
+                    </span>
+                    <span class="text-sm font-medium tracking-wide text-gray-400">Available for new opportunities</span>
+                </div>
+
+                <h1 class="text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-tight tracking-tight mb-8">
+                    <div class="mask-text"><span class="gradient-text">Nisarg Bathwar</span></div>
+                    <div class="mask-text mt-2"><span class="text-white">Android Developer</span></div>
+                </h1>
+
+                <p class="text-lg md:text-xl font-light text-gray-400 leading-relaxed mb-10 hero-animate">
+                    Android Developer specializing in <span class="text-white font-medium">Kotlin, Jetpack Compose, MVVM architecture</span> and modern Android architecture.
+                </p>
+
+                <div class="flex flex-wrap gap-4 justify-center hero-animate mb-12">
+                    <a href="#projects" class="group px-8 py-3.5 bg-accent-primary text-white text-sm font-semibold rounded-lg hover:bg-accent-secondary transition-all flex items-center gap-2 shadow-lg shadow-accent-primary/20">
+                        View Projects
+                        <iconify-icon icon="lucide:arrow-right" class="transition-transform group-hover:translate-x-1"></iconify-icon>
+                    </a>
+                    <a href="mailto:hello@nisarg.dev" class="px-8 py-3.5 bg-white/5 text-white text-sm font-semibold rounded-lg border border-white/10 hover:bg-white/10 transition-all">
+                        Contact Me
+                    </a>
+                </div>
+
+                <!-- Social Icons -->
+                <div class="flex items-center justify-center gap-4 hero-animate">
+                    <a href="https://github.com/NisargBathwar" class="p-3 rounded-lg border border-white/10 text-gray-400 hover:text-white hover:border-accent-primary hover:bg-accent-primary/10 transition-all">
+                        <iconify-icon icon="lucide:github" width="20"></iconify-icon>
+                    </a>
+                    <a href="https://www.linkedin.com/in/nisarg-bathwar-9babb4337/" class="p-3 rounded-lg border border-white/10 text-gray-400 hover:text-white hover:border-accent-primary hover:bg-accent-primary/10 transition-all">
+                        <iconify-icon icon="lucide:linkedin" width="20"></iconify-icon>
+                    </a>
+                    <a href="#" class="p-3 rounded-lg border border-white/10 text-gray-400 hover:text-white hover:border-accent-primary hover:bg-accent-primary/10 transition-all">
+                        <iconify-icon icon="lucide:twitter" width="20"></iconify-icon>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-0 left-0 right-0 w-full py-12 flex justify-center items-center z-10">
+            <div class="flex flex-col items-center gap-3 text-gray-500 hero-animate">
+                <span class="text-[10px] uppercase tracking-widest font-medium">Scroll Down</span>
+                <iconify-icon icon="lucide:chevrons-down" class="animate-bounce text-accent-primary opacity-70" width="20"></iconify-icon>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack Ticker -->
+    <section class="py-8 border-y border-white/5 overflow-hidden bg-slate-850/50">
+        <div class="marquee-track flex items-center gap-16 whitespace-nowrap">
+            <span class="text-2xl font-display text-white/20 font-medium">Kotlin</span>
+            <iconify-icon icon="lucide:dot" class="text-accent-primary text-xl"></iconify-icon>
+            <span class="text-2xl font-display text-white/20 font-medium">Jetpack Compose</span>
+            <iconify-icon icon="lucide:dot" class="text-accent-primary text-xl"></iconify-icon>
+            <span class="text-2xl font-display text-white/20 font-medium">MVVM</span>
+            <iconify-icon icon="lucide:dot" class="text-accent-primary text-xl"></iconify-icon>
+            <span class="text-2xl font-display text-white/20 font-medium">Hilt</span>
+            <iconify-icon icon="lucide:dot" class="text-accent-primary text-xl"></iconify-icon>
+            <span class="text-2xl font-display text-white/20 font-medium">Coroutines</span>
+            <iconify-icon icon="lucide:dot" class="text-accent-primary text-xl"></iconify-icon>
+            <span class="text-2xl font-display text-white/20 font-medium">Material Design 3</span>
+            
+            <span class="text-2xl font-display text-white/20 font-medium">Kotlin</span>
+            <iconify-icon icon="lucide:dot" class="text-accent-primary text-xl"></iconify-icon>
+            <span class="text-2xl font-display text-white/20 font-medium">Jetpack Compose</span>
+            <iconify-icon icon="lucide:dot" class="text-accent-primary text-xl"></iconify-icon>
+            <span class="text-2xl font-display text-white/20 font-medium">MVVM</span>
+            <iconify-icon icon="lucide:dot" class="text-accent-primary text-xl"></iconify-icon>
+            <span class="text-2xl font-display text-white/20 font-medium">Hilt</span>
+            <iconify-icon icon="lucide:dot" class="text-accent-primary text-xl"></iconify-icon>
+            <span class="text-2xl font-display text-white/20 font-medium">Coroutines</span>
+            <iconify-icon icon="lucide:dot" class="text-accent-primary text-xl"></iconify-icon>
+            <span class="text-2xl font-display text-white/20 font-medium">Material Design 3</span>
+        </div>
+    </section>
+
+    <!-- About Me Section -->
+    <section id="about" class="py-32 px-6">
+        <div class="max-w-3xl mx-auto text-center about-content">
+            <span class="text-xs font-bold tracking-[0.2em] uppercase text-accent-primary mb-4 block">About Me</span>
+            <h2 class="text-4xl md:text-5xl font-display font-bold text-white tracking-tight mb-8">
+                Passionate about building modern Android applications and learning advanced Android architecture.
+            </h2>
+            <p class="text-lg md:text-xl font-light text-gray-400 leading-relaxed">
+                Android developer focused on building modern applications using <span class="text-white font-medium">Kotlin</span>, 
+                <span class="text-white font-medium">Jetpack Compose</span>, <span class="text-white font-medium">MVVM architecture</span>, 
+                and clean state management. Passionate about learning advanced Android development.
+            </p>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-32 px-6 bg-slate-850/30 border-t border-white/5">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-20">
+                <span class="text-xs font-bold tracking-[0.2em] uppercase text-accent-primary mb-4 block">Portfolio</span>
+                <h2 class="text-4xl md:text-5xl font-display font-bold text-white tracking-tight">
+                    Featured Projects
+                </h2>
+            </div>
+
+            <div class="grid gap-8">
+                
+                <!-- Project 1: Task Manager -->
+                <div class="project-card group rounded-2xl border border-white/5 p-8 md:p-12 flex flex-col md:flex-row justify-between gap-8">
+                    <div class="flex-1">
+                        <div class="flex flex-wrap items-center gap-2 mb-4">
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-accent-primary/10 text-accent-secondary rounded-full border border-accent-primary/20">Kotlin</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">Jetpack Compose</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">Room Database</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">MVVM</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">StateFlow</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">Repository Pattern</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">Material3</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">Navigation</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">Hilt</span>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-display font-bold text-white mb-4 group-hover:text-accent-secondary transition-colors">Task Manager</h3>
+                        <p class="text-gray-400 font-light leading-relaxed max-w-2xl">
+                            Created a Task Manager app using Jetpack Compose, Room, and MVVM architecture with support for task creation, deletion, and completion tracking. Implemented state-based UI updates and repository pattern for structured data handling.
+                        </p>
+                    </div>
+                    <div class="flex items-center">
+                        <a href="https://github.com/NisargBathwar/TaskManager" class="flex items-center gap-2 px-6 py-3 bg-white/5 rounded-lg text-white font-medium hover:bg-accent-primary hover:text-white transition-all group/btn">
+                            View Code 
+                            <iconify-icon icon="lucide:github" class="opacity-70"></iconify-icon>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 2: Note App -->
+                <div class="project-card group rounded-2xl border border-white/5 p-8 md:p-12 flex flex-col md:flex-row justify-between gap-8">
+                    <div class="flex-1">
+                        <div class="flex flex-wrap items-center gap-2 mb-4">
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-accent-primary/10 text-accent-secondary rounded-full border border-accent-primary/20">Kotlin</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">Jetpack Compose</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">MVVM Architecture</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">StateFlow</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">ViewModel</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">Repository Pattern</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">Material3 UI</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">Hilt</span>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-display font-bold text-white mb-4 group-hover:text-accent-secondary transition-colors">Notes App</h3>
+                        <p class="text-gray-400 font-light leading-relaxed max-w-2xl">
+                            Developed a Notes application using Jetpack Compose and MVVM architecture that allows users to create, edit, and delete notes with real-time UI updates. Implemented state management using StateFlow and event-driven ViewModel for clean architecture.
+                        </p>
+                    </div>
+                    <div class="flex items-center">
+                        <a href="https://github.com/NisargBathwar/NoteAppFinal" class="flex items-center gap-2 px-6 py-3 bg-white/5 rounded-lg text-white font-medium hover:bg-accent-primary hover:text-white transition-all group/btn">
+                            View Code 
+                            <iconify-icon icon="lucide:github" class="opacity-70"></iconify-icon>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 3: Expense Tracker -->
+                <div class="project-card group rounded-2xl border border-white/5 p-8 md:p-12 flex flex-col md:flex-row justify-between gap-8">
+                    <div class="flex-1">
+                        <div class="flex flex-wrap items-center gap-2 mb-4">
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-accent-primary/10 text-accent-secondary rounded-full border border-accent-primary/20">Kotlin</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">Jetpack Compose</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">Room Database</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">MVVM Architecture</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">StateFlow</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">Repository Pattern</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">Material3</span>
+                            <span class="px-3 py-1 text-[10px] tracking-wider uppercase bg-white/5 text-gray-400 rounded-full">Hilt</span>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-display font-bold text-white mb-4 group-hover:text-accent-secondary transition-colors">Expense Tracker</h3>
+                        <p class="text-gray-400 font-light leading-relaxed max-w-2xl">
+                            Built an Expense Tracker application using Jetpack Compose, Room Database, and MVVM architecture to store and manage expenses locally. Implemented persistent storage, reactive UI updates, and clean repository-based data handling.
+                        </p>
+                    </div>
+                    <div class="flex items-center">
+                        <a href="https://github.com/NisargBathwar/ExpenseTracker" class="flex items-center gap-2 px-6 py-3 bg-white/5 rounded-lg text-white font-medium hover:bg-accent-primary hover:text-white transition-all group/btn">
+                            View Code 
+                            <iconify-icon icon="lucide:github" class="opacity-70"></iconify-icon>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-32 px-6 border-t border-white/5">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-16 text-center">
+                <span class="text-xs font-bold tracking-[0.2em] uppercase text-accent-primary mb-4 block">Expertise</span>
+                <h2 class="text-4xl md:text-5xl font-display font-bold text-white tracking-tight">
+                    Technical Skills
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
+                <div class="tech-pill flex flex-col items-center justify-center gap-3 p-6 rounded-2xl text-center group cursor-pointer">
+                    <iconify-icon icon="logos:kotlin" width="32"></iconify-icon>
+                    <span class="font-medium text-white text-sm">Kotlin</span>
+                </div>
+
+                <div class="tech-pill flex flex-col items-center justify-center gap-3 p-6 rounded-2xl text-center group cursor-pointer">
+                    <iconify-icon icon="logos:compose" width="32"></iconify-icon>
+                    <span class="font-medium text-white text-sm">Jetpack Compose</span>
+                </div>
+
+                <div class="tech-pill flex flex-col items-center justify-center gap-3 p-6 rounded-2xl text-center group cursor-pointer">
+                    <iconify-icon icon="logos:android-icon" width="32"></iconify-icon>
+                    <span class="font-medium text-white text-sm">Android SDK</span>
+                </div>
+
+                <div class="tech-pill flex flex-col items-center justify-center gap-3 p-6 rounded-2xl text-center group cursor-pointer">
+                    <div class="w-8 h-8 rounded-full bg-accent-primary/20 flex items-center justify-center text-accent-secondary">
+                        <iconify-icon icon="lucide:layers" width="18"></iconify-icon>
+                    </div>
+                    <span class="font-medium text-white text-sm">MVVM</span>
+                </div>
+
+                <div class="tech-pill flex flex-col items-center justify-center gap-3 p-6 rounded-2xl text-center group cursor-pointer">
+                    <div class="w-8 h-8 rounded-full bg-accent-primary/20 flex items-center justify-center text-accent-secondary">
+                        <iconify-icon icon="lucide:activity" width="18"></iconify-icon>
+                    </div>
+                    <span class="font-medium text-white text-sm">StateFlow</span>
+                </div>
+
+                <div class="tech-pill flex flex-col items-center justify-center gap-3 p-6 rounded-2xl text-center group cursor-pointer">
+                    <div class="w-8 h-8 rounded-full bg-accent-primary/20 flex items-center justify-center text-accent-secondary">
+                        <iconify-icon icon="lucide:database" width="18"></iconify-icon>
+                    </div>
+                    <span class="font-medium text-white text-sm">Repository</span>
+                </div>
+
+                <div class="tech-pill flex flex-col items-center justify-center gap-3 p-6 rounded-2xl text-center group cursor-pointer">
+                    <div class="w-8 h-8 rounded-full bg-accent-primary/20 flex items-center justify-center text-accent-secondary">
+                        <iconify-icon icon="lucide:navigation" width="18"></iconify-icon>
+                    </div>
+                    <span class="font-medium text-white text-sm">Navigation</span>
+                </div>
+
+                <div class="tech-pill flex flex-col items-center justify-center gap-3 p-6 rounded-2xl text-center group cursor-pointer">
+                    <iconify-icon icon="logos:hilt" width="32"></iconify-icon>
+                    <span class="font-medium text-white text-sm">Hilt</span>
+                </div>
+
+                <div class="tech-pill flex flex-col items-center justify-center gap-3 p-6 rounded-2xl text-center group cursor-pointer">
+                    <div class="w-8 h-8 rounded-full bg-accent-primary/20 flex items-center justify-center text-accent-secondary">
+                        <iconify-icon icon="lucide:hard-drive" width="18"></iconify-icon>
+                    </div>
+                    <span class="font-medium text-white text-sm">Room DB</span>
+                </div>
+
+                <div class="tech-pill flex flex-col items-center justify-center gap-3 p-6 rounded-2xl text-center group cursor-pointer">
+                    <div class="w-8 h-8 rounded-full bg-accent-primary/20 flex items-center justify-center text-accent-secondary">
+                        <iconify-icon icon="lucide:loader" width="18"></iconify-icon>
+                    </div>
+                    <span class="font-medium text-white text-sm">Coroutines</span>
+                </div>
+
+                <div class="tech-pill flex flex-col items-center justify-center gap-3 p-6 rounded-2xl text-center group cursor-pointer">
+                    <iconify-icon icon="logos:github-icon" width="32"></iconify-icon>
+                    <span class="font-medium text-white text-sm">Git & GitHub</span>
+                </div>
+
+                <div class="tech-pill flex flex-col items-center justify-center gap-3 p-6 rounded-2xl text-center group cursor-pointer">
+                    <iconify-icon icon="logos:android-studio" width="32"></iconify-icon>
+                    <span class="font-medium text-white text-sm">Android Studio</span>
+                </div>
+
+                <div class="tech-pill flex flex-col items-center justify-center gap-3 p-6 rounded-2xl text-center group cursor-pointer">
+                    <div class="w-8 h-8 rounded-full bg-accent-primary/20 flex items-center justify-center text-accent-secondary">
+                        <iconify-icon icon="lucide:palette" width="18"></iconify-icon>
+                    </div>
+                    <span class="font-medium text-white text-sm">Material3</span>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- GSAP Animation Script -->
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hero Animation
+            gsap.to('.hero-animate', {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                stagger: 0.1,
+                ease: "power3.out",
+                delay: 0.3
+            });
+
+            // Text reveal
+            const textElements = document.querySelectorAll('.mask-text span');
+            textElements.forEach((span) => {
+                gsap.to(span, {
+                    y: 0,
+                    duration: 1.2,
+                    ease: "power3.out",
+                    delay: 0.6
+                });
+            });
+        });
+
+        // Scroll Animations
+        
+        // About Section
+        gsap.from('.about-content', {
+            scrollTrigger: { trigger: '.about-content', start: "top 85%" },
+            opacity: 0, y: 40, duration: 0.8, ease: "power3.out"
+        });
+
+        // Project Cards
+        gsap.utils.toArray('.project-card').forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: { trigger: card, start: "top 85%" },
+                opacity: 0, y: 60, duration: 0.8, ease: "power3.out"
+            });
+        });
+
+        // Tech Pills
+        gsap.utils.toArray('.tech-pill').forEach((pill, i) => {
+            gsap.from(pill, {
+                scrollTrigger: { trigger: pill, start: "top 90%" },
+                opacity: 0, scale: 0.9, duration: 0.4, delay: i * 0.02, ease: "back.out(1.7)"
+            });
+        });
+    </script>
+</body>
+</html>
